@@ -1,0 +1,7 @@
+/packages
+/LogiWheelSettings/bin
+/LogiWheelSettings/obj
+*.user
+*.aps
+*.pfx
+*.vs
