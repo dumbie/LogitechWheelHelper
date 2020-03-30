@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:LogiWheelSettings"
         mc:Ignorable="d"
         Title="Logitech Wheel Settings"
-        Height="470"
+        Height="450"
+        MinHeight="380"
         MinWidth="380"
         MaxWidth="380">
 
@@ -49,9 +50,11 @@
             <CheckBox IsEnabled="False" Content="Allow game to adjust settings"/>
 
             <TextBlock x:Name="textblock_DeviceCurrent" Margin="0,15,0,0" Text="Current device"/>
+            <TextBlock Margin="0,10,0,0" Text="You may need to restart the game to apply updated settings."/>
 
-            <Button Visibility="Collapsed" x:Name="button_SettingsApplyProfile" Margin="0,15,0,0" Content="Apply settings profile"/>
-            <Button Visibility="Collapsed" x:Name="button_SettingsSaveProfile" Margin="0,15,0,0" Content="Save settings to profile"/>
+            <Button x:Name="button_ShowLogitech" Margin="0,10,0,0" Content="Show Logitech software" Click="button_ShowLogitech_Click"/>
+            <Button Visibility="Collapsed" x:Name="button_SettingsSetProfile" Margin="0,15,0,0" Content="Set settings from default profile"/>
+            <Button Visibility="Collapsed" x:Name="button_SettingsSaveProfile" Margin="0,10,0,0" Content="Save settings to default profile"/>
             <Button x:Name="button_SettingsReset" Margin="0,15,0,0" Content="Reset settings to defaults" Click="button_SettingsReset_Click"/>
         </StackPanel>
     </ScrollViewer>

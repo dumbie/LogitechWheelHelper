@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Windows;
 
 namespace LogiWheelSettings
@@ -43,11 +44,18 @@ namespace LogiWheelSettings
                 {
                     if (registryKey != null)
                     {
-                        string ForceEnabled = registryKey.GetValue("ForceEnabled").ToString();
-                        checkbox_ForceEnabled.IsChecked = ForceEnabled == "1";
+                        //AmplitudeBasedForce
+                        //AmplitudeBasedForceThreshold
+                        //DeltaSpringAdjustDown
+                        //DeltaSpringXAdjust
+                        //DeltaSpringYAdjust
+                        //FlipDeltaSpringToY
 
-                        string PersistentCenteringSpring = registryKey.GetValue("PersistentCenteringSpring").ToString();
-                        checkbox_PersistentCenteringSpring.IsChecked = PersistentCenteringSpring == "1";
+                        int ForceEnabled = Convert.ToInt32(registryKey.GetValue("ForceEnabled"));
+                        checkbox_ForceEnabled.IsChecked = ForceEnabled == 1;
+
+                        int PersistentCenteringSpring = Convert.ToInt32(registryKey.GetValue("PersistentCenteringSpring"));
+                        checkbox_PersistentCenteringSpring.IsChecked = PersistentCenteringSpring == 1;
 
                         int OverallStrength = Convert.ToInt32(registryKey.GetValue("OverallStrength")) / 100;
                         slider_OverallStrength.Value = OverallStrength;
@@ -159,6 +167,30 @@ namespace LogiWheelSettings
             {
                 MessageBox.Show("Could not change registry, please run as administrator.", "LogiWheelSettings");
             }
+        }
+
+        void button_ShowLogitech_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                string logitechHubPath = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + @"\LGHub\LGHub.exe";
+                string logitechGamingPath = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + @"\Logitech Gaming Software\LCore.exe";
+
+                if (File.Exists(logitechHubPath))
+                {
+                    Process launchProcess = new Process();
+                    launchProcess.StartInfo.FileName = logitechHubPath;
+                    launchProcess.Start();
+                }
+
+                if (File.Exists(logitechGamingPath))
+                {
+                    Process launchProcess = new Process();
+                    launchProcess.StartInfo.FileName = logitechGamingPath;
+                    launchProcess.Start();
+                }
+            }
+            catch { }
         }
     }
 }
