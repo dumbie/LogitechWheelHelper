@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows;
+using System.Windows.Threading;
 using System.Xml.Linq;
 
 namespace LogiWheelSettings
@@ -14,6 +15,9 @@ namespace LogiWheelSettings
         public static string vLoadProfile = string.Empty;
         public static string vLoadDeviceName = "G27/G29/G920";
         public static string vLoadDeviceId = "VID_046D&PID_C29B";
+
+        //Application Timers
+        public static DispatcherTimer vDispatcherTimer = new DispatcherTimer();
 
         //Window Initialize
         public WindowMain() { InitializeComponent(); }
@@ -28,6 +32,27 @@ namespace LogiWheelSettings
 
                 //Load the available profiles
                 ProfilesLoad();
+            }
+            catch { }
+        }
+
+        //Show message status
+        public void ShowMessageStatus(string message)
+        {
+            try
+            {
+                vDispatcherTimer.Stop();
+
+                textblock_MessageStatus.Text = message;
+                grid_MessageStatus.Visibility = Visibility.Visible;
+
+                vDispatcherTimer.Interval = TimeSpan.FromSeconds(3);
+                vDispatcherTimer.Tick += delegate
+                {
+                    grid_MessageStatus.Visibility = Visibility.Collapsed;
+                    vDispatcherTimer.Stop();
+                };
+                vDispatcherTimer.Start();
             }
             catch { }
         }
@@ -138,6 +163,9 @@ namespace LogiWheelSettings
 
                 //Load the current settings
                 SettingsLoad();
+
+                //Show the message status
+                ShowMessageStatus("Settings reset to defaults.");
             }
             catch
             {
@@ -167,6 +195,7 @@ namespace LogiWheelSettings
         {
             try
             {
+                ShowMessageStatus("Showing Logitech software");
                 string logitechHubPath = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + @"\LGHub\LGHub.exe";
                 string logitechGamingPath = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + @"\Logitech Gaming Software\LCore.exe";
 
@@ -192,11 +221,11 @@ namespace LogiWheelSettings
             {
                 if (vLoadProfile == string.Empty)
                 {
+                    ShowMessageStatus("No profile selected.");
                     Debug.WriteLine("No profile selected.");
                     return;
                 }
 
-                Debug.WriteLine("Saving profile: " + vLoadProfile);
                 XDocument xmlProfile = XDocument.Load(vLoadProfile);
 
                 int ForceEnabled = (bool)checkbox_ForceEnabled.IsChecked ? 1 : 0;
@@ -218,6 +247,8 @@ namespace LogiWheelSettings
                 xmlProfile.Descendants("CenteringSpring").First().Value = CenteringSpring.ToString();
 
                 xmlProfile.Save(vLoadProfile);
+
+                ShowMessageStatus("Saved profile: " + Path.GetFileNameWithoutExtension(vLoadProfile));
                 Debug.WriteLine("Saved profile: " + vLoadProfile);
             }
             catch
@@ -230,7 +261,6 @@ namespace LogiWheelSettings
         {
             try
             {
-                Debug.WriteLine("Loading profile: " + vLoadProfile);
                 XDocument xmlProfile = XDocument.Load(vLoadProfile);
 
                 int ForceEnabled = Convert.ToInt32(xmlProfile.Descendants("ForceEnabled").First().Value);
@@ -251,11 +281,12 @@ namespace LogiWheelSettings
                 int CenteringSpring = Convert.ToInt32(xmlProfile.Descendants("CenteringSpring").First().Value) / 100;
                 slider_CenteringSpring.Value = CenteringSpring;
 
+                ShowMessageStatus("Loaded profile: " + Path.GetFileNameWithoutExtension(vLoadProfile));
                 Debug.WriteLine("Loaded profile: " + vLoadProfile);
             }
             catch
             {
-                MessageBox.Show("Failed loading profile.", "LogiWheelSettings");
+                MessageBox.Show("Failed loading profile: " + Path.GetFileNameWithoutExtension(vLoadProfile), "LogiWheelSettings");
             }
         }
     }
