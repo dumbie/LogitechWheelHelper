@@ -3,7 +3,9 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Threading;
 using System.Xml.Linq;
 
@@ -32,6 +34,11 @@ namespace LogiWheelSettings
 
                 //Load the available profiles
                 ProfilesLoad();
+
+                //Update version tooltip
+                string stringVersion = "Application made by Arnold Vink\nVersion: v" + Assembly.GetEntryAssembly().FullName.Split('=')[1].Split(',')[0];
+                ToolTip tooltipVersion = new ToolTip() { Content = stringVersion };
+                image_LogiWheelSettings.ToolTip = tooltipVersion;
             }
             catch { }
         }
@@ -100,7 +107,6 @@ namespace LogiWheelSettings
             }
             catch
             {
-                MessageBox.Show("Registry settings not available, resetting to default settings.", "LogiWheelSettings");
                 SettingsReset();
             }
         }
@@ -165,11 +171,11 @@ namespace LogiWheelSettings
                 SettingsLoad();
 
                 //Show the message status
-                ShowMessageStatus("Settings reset to defaults.");
+                ShowMessageStatus("Settings reset to defaults");
             }
             catch
             {
-                MessageBox.Show("Failed resetting to default settings.", "LogiWheelSettings");
+                ShowMessageStatus("Failed resetting settings");
             }
         }
 
@@ -187,7 +193,7 @@ namespace LogiWheelSettings
             }
             catch
             {
-                MessageBox.Show("Could not change registry, please run as administrator.", "LogiWheelSettings");
+                ShowMessageStatus("Could not update registry");
             }
         }
 
@@ -221,8 +227,8 @@ namespace LogiWheelSettings
             {
                 if (vLoadProfile == string.Empty)
                 {
-                    ShowMessageStatus("No profile selected.");
-                    Debug.WriteLine("No profile selected.");
+                    ShowMessageStatus("No profile selected");
+                    Debug.WriteLine("No profile selected");
                     return;
                 }
 
@@ -253,7 +259,7 @@ namespace LogiWheelSettings
             }
             catch
             {
-                MessageBox.Show("Failed saving profile.", "LogiWheelSettings");
+                ShowMessageStatus("Failed saving profile: " + Path.GetFileNameWithoutExtension(vLoadProfile));
             }
         }
 
@@ -286,7 +292,28 @@ namespace LogiWheelSettings
             }
             catch
             {
-                MessageBox.Show("Failed loading profile: " + Path.GetFileNameWithoutExtension(vLoadProfile), "LogiWheelSettings");
+                ShowMessageStatus("Failed loading profile: " + Path.GetFileNameWithoutExtension(vLoadProfile));
+            }
+        }
+
+        void button_SettingsRemove_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                //Open the Windows registry
+                using (RegistryKey registryKeyCurrentUser = RegistryKey.OpenBaseKey(RegistryHive.CurrentUser, RegistryView.Registry32))
+                {
+                    //Remove Logitech settings key
+                    registryKeyCurrentUser.DeleteSubKeyTree(@"Software\Logitech\Gaming Software\DriverSettings\" + vLoadDeviceId);
+                }
+
+                ShowMessageStatus("Settings removed from registry");
+                MessageBox.Show("Settings removed from registry, the application will now be closed.\n\nThe next time you run this application the settings will be recreated.", "Logitech Wheel Settings");
+                Environment.Exit(0);
+            }
+            catch
+            {
+                ShowMessageStatus("Failed removing settings");
             }
         }
     }

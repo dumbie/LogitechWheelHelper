@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="Logitech Wheel Settings"
         ResizeMode="CanMinimize"
-        Height="515"
+        Height="545"
         Width="380">
 
     <Grid>
@@ -34,8 +34,10 @@
             <ComboBox x:Name="combobox_SettingsLoadProfile" Margin="0,10,0,0" SelectionChanged="combobox_SettingsLoadProfile_SelectionChanged"/>
             <Button x:Name="button_SettingsSaveProfile" Margin="0,10,0,0" Content="Save settings to profile" Click="button_SettingsSaveProfile_Click"/>
             <Button x:Name="button_SettingsReset" Margin="0,10,0,0" Content="Reset settings to defaults" Click="button_SettingsReset_Click"/>
+            <Button x:Name="button_SettingsRemove" Margin="0,10,0,0" Content="Remove settings from registry" Click="button_SettingsRemove_Click"/>
             <Button x:Name="button_ShowLogitech" Margin="0,10,0,0" Content="Show Logitech software" Click="button_ShowLogitech_Click"/>
         </StackPanel>
+        <Image x:Name="image_LogiWheelSettings" Margin="0,5,5,0" HorizontalAlignment="Right" VerticalAlignment="Top" Width="30" Height="30" Source="Assets/AppIcon.ico"/>
         <Grid x:Name="grid_MessageStatus" Visibility="Collapsed" VerticalAlignment="Top">
             <Grid.Background>
                 <SolidColorBrush Color="#333" Opacity="0.85"/>
