@@ -6,56 +6,33 @@
         xmlns:local="clr-namespace:LogiWheelSettings"
         mc:Ignorable="d"
         Title="Logitech Wheel Settings"
-        Height="450"
-        MinHeight="380"
-        MinWidth="380"
-        MaxWidth="380">
+        ResizeMode="NoResize"
+        Height="515"
+        Width="380">
 
-    <ScrollViewer>
-        <StackPanel Margin="5,0,5,5">
-            <TextBlock Text="Force Feedback" FontSize="20"/>
-            <CheckBox x:Name="checkbox_ForceEnabled" Content="Enable force feedback" Click="checkbox_ForceEnabled_Click"/>
-            <TextBlock x:Name="textblock_OverallStrength" Text="Overall effects strength"/>
-            <Slider x:Name="slider_OverallStrength" Minimum="0" Maximum="150" ValueChanged="slider_OverallStrength_ValueChanged"/>
-            <TextBlock x:Name="textblock_SpringStrength" Text="Spring effect strength"/>
-            <Slider x:Name="slider_SpringStrength" Minimum="0" Maximum="150" ValueChanged="slider_SpringStrength_ValueChanged"/>
-            <TextBlock x:Name="textblock_DamperStrength" Text="Damper effect strength"/>
-            <Slider x:Name="slider_DamperStrength" Minimum="0" Maximum="150" ValueChanged="slider_DamperStrength_ValueChanged"/>
+    <StackPanel Margin="5,0,5,5">
+        <TextBlock Text="Force Feedback" FontSize="20"/>
+        <CheckBox x:Name="checkbox_ForceEnabled" Content="Enable force feedback" Checked="checkbox_ForceEnabled_Checked" Unchecked="checkbox_ForceEnabled_Unchecked"/>
+        <TextBlock x:Name="textblock_OverallStrength" Text="Overall effects strength"/>
+        <Slider x:Name="slider_OverallStrength" Minimum="0" Maximum="150" ValueChanged="slider_OverallStrength_ValueChanged"/>
+        <TextBlock x:Name="textblock_SpringStrength" Text="Spring effect strength"/>
+        <Slider x:Name="slider_SpringStrength" Minimum="0" Maximum="150" ValueChanged="slider_SpringStrength_ValueChanged"/>
+        <TextBlock x:Name="textblock_DamperStrength" Text="Damper effect strength"/>
+        <Slider x:Name="slider_DamperStrength" Minimum="0" Maximum="150" ValueChanged="slider_DamperStrength_ValueChanged"/>
 
-            <TextBlock Text="Centering Spring" FontSize="20" Margin="0,15,0,0"/>
-            <CheckBox x:Name="checkbox_PersistentCenteringSpring" Content="Enable centering spring" Click="checkbox_PersistentCenteringSpring_Click"/>
-            <TextBlock x:Name="textblock_CenteringSpring" Text="Centering spring strength"/>
-            <Slider x:Name="slider_CenteringSpring" Minimum="0" Maximum="150" ValueChanged="slider_CenteringSpring_ValueChanged"/>
+        <TextBlock Text="Centering Spring" FontSize="20" Margin="0,10,0,0"/>
+        <CheckBox x:Name="checkbox_PersistentCenteringSpring" Content="Enable centering spring" Checked="checkbox_PersistentCenteringSpring_Checked" Unchecked="checkbox_PersistentCenteringSpring_Unchecked"/>
+        <TextBlock x:Name="textblock_CenteringSpring" Text="Centering spring strength"/>
+        <Slider x:Name="slider_CenteringSpring" Minimum="0" Maximum="150" ValueChanged="slider_CenteringSpring_ValueChanged"/>
 
-            <TextBlock Text="Wheel Settings" FontSize="20" Margin="0,15,0,0"/>
-            <TextBlock IsEnabled="False" Text="Wheel rotation range"/>
-            <Slider IsEnabled="False" Minimum="40" Maximum="900" />
+        <TextBlock Margin="0,10,0,0" Text="* You can change the wheel rotate range and sensitivity, pedal sensitivity and combine pedal settings in the Logitech software." TextWrapping="Wrap"/>
+        <TextBlock Margin="0,10,0,0" Text="* You may have to restart the game to apply updated settings."/>
+        <TextBlock Margin="0,10,0,0" Text="* Logitech software needs to be running for your wheel to work."/>
+        <TextBlock x:Name="textblock_DeviceCurrent" Margin="0,10,0,0" Text="Current device"/>
 
-            <TextBlock IsEnabled="False" Margin="0,15,0,0" Text="Wheel sensitivity"/>
-            <Slider IsEnabled="False" Minimum="0" Maximum="100"/>
-
-            <TextBlock Text="Pedal Settings" FontSize="20" Margin="0,15,0,0"/>
-            <TextBlock IsEnabled="False" Text="Clutch sensitivity"/>
-            <Slider IsEnabled="False" Minimum="0" Maximum="100"/>
-
-            <TextBlock IsEnabled="False" Margin="0,15,0,0" Text="Brake sensitivity"/>
-            <Slider IsEnabled="False" Minimum="0" Maximum="100"/>
-
-            <TextBlock IsEnabled="False" Margin="0,15,0,0" Text="Accelerator sensitivity"/>
-            <Slider IsEnabled="False" Minimum="0" Maximum="100"/>
-
-            <CheckBox IsEnabled="False" Margin="0,15,0,0" Content="Combined pedals (single axis)"/>
-
-            <TextBlock Text="Game Settings" FontSize="20" Margin="0,15,0,0"/>
-            <CheckBox IsEnabled="False" Content="Allow game to adjust settings"/>
-
-            <TextBlock x:Name="textblock_DeviceCurrent" Margin="0,15,0,0" Text="Current device"/>
-            <TextBlock Margin="0,10,0,0" Text="You may need to restart the game to apply updated settings."/>
-
-            <Button x:Name="button_ShowLogitech" Margin="0,10,0,0" Content="Show Logitech software" Click="button_ShowLogitech_Click"/>
-            <Button Visibility="Collapsed" x:Name="button_SettingsSetProfile" Margin="0,15,0,0" Content="Set settings from default profile"/>
-            <Button Visibility="Collapsed" x:Name="button_SettingsSaveProfile" Margin="0,10,0,0" Content="Save settings to default profile"/>
-            <Button x:Name="button_SettingsReset" Margin="0,15,0,0" Content="Reset settings to defaults" Click="button_SettingsReset_Click"/>
-        </StackPanel>
-    </ScrollViewer>
+        <ComboBox x:Name="combobox_SettingsLoadProfile" Margin="0,10,0,0" SelectionChanged="combobox_SettingsLoadProfile_SelectionChanged"/>
+        <Button x:Name="button_SettingsSaveProfile" Margin="0,10,0,0" Content="Save settings to profile" Click="button_SettingsSaveProfile_Click"/>
+        <Button x:Name="button_SettingsReset" Margin="0,10,0,0" Content="Reset settings to defaults" Click="button_SettingsReset_Click"/>
+        <Button x:Name="button_ShowLogitech" Margin="0,10,0,0" Content="Show Logitech software" Click="button_ShowLogitech_Click"/>
+    </StackPanel>
 </Window>

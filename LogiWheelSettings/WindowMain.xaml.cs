@@ -2,17 +2,18 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Windows;
+using System.Xml.Linq;
 
 namespace LogiWheelSettings
 {
     public partial class WindowMain : Window
     {
         //Application Variables
+        public static string vLoadProfile = string.Empty;
         public static string vLoadDeviceName = "G27/G29/G920";
-        public static string vLoadDeviceId = "VID_046D&PID_C29B"; //G27/G29/G920
-        //public static string vLoadDeviceId = "VID_046D&PID_C299"; //G25
-        //public static string vLoadDeviceId = "VID_046D&PID_C29A"; //DFGT
+        public static string vLoadDeviceId = "VID_046D&PID_C29B";
 
         //Window Initialize
         public WindowMain() { InitializeComponent(); }
@@ -24,6 +25,9 @@ namespace LogiWheelSettings
             {
                 //Load the current settings
                 SettingsLoad();
+
+                //Load the available profiles
+                ProfilesLoad();
             }
             catch { }
         }
@@ -37,46 +41,37 @@ namespace LogiWheelSettings
                 textblock_DeviceCurrent.Text = "Current device: " + vLoadDeviceId + " (" + vLoadDeviceName + ")";
 
                 //Open the Windows registry
-                RegistryKey registryKeyCurrentUser = RegistryKey.OpenBaseKey(RegistryHive.CurrentUser, RegistryView.Registry32);
-
-                //Read the Logitech settings
-                using (RegistryKey registryKey = registryKeyCurrentUser.OpenSubKey(@"Software\Logitech\Gaming Software\DriverSettings\" + vLoadDeviceId))
+                using (RegistryKey registryKeyCurrentUser = RegistryKey.OpenBaseKey(RegistryHive.CurrentUser, RegistryView.Registry32))
                 {
-                    if (registryKey != null)
+                    //Read the Logitech settings
+                    using (RegistryKey openSubKey = registryKeyCurrentUser.OpenSubKey(@"Software\Logitech\Gaming Software\DriverSettings\" + vLoadDeviceId))
                     {
-                        //AmplitudeBasedForce
-                        //AmplitudeBasedForceThreshold
-                        //DeltaSpringAdjustDown
-                        //DeltaSpringXAdjust
-                        //DeltaSpringYAdjust
-                        //FlipDeltaSpringToY
+                        if (openSubKey != null)
+                        {
+                            int ForceEnabled = Convert.ToInt32(openSubKey.GetValue("ForceEnabled"));
+                            checkbox_ForceEnabled.IsChecked = ForceEnabled == 1;
 
-                        int ForceEnabled = Convert.ToInt32(registryKey.GetValue("ForceEnabled"));
-                        checkbox_ForceEnabled.IsChecked = ForceEnabled == 1;
+                            int PersistentCenteringSpring = Convert.ToInt32(openSubKey.GetValue("PersistentCenteringSpring"));
+                            checkbox_PersistentCenteringSpring.IsChecked = PersistentCenteringSpring == 1;
 
-                        int PersistentCenteringSpring = Convert.ToInt32(registryKey.GetValue("PersistentCenteringSpring"));
-                        checkbox_PersistentCenteringSpring.IsChecked = PersistentCenteringSpring == 1;
+                            int OverallStrength = Convert.ToInt32(openSubKey.GetValue("OverallStrength")) / 100;
+                            slider_OverallStrength.Value = OverallStrength;
 
-                        int OverallStrength = Convert.ToInt32(registryKey.GetValue("OverallStrength")) / 100;
-                        slider_OverallStrength.Value = OverallStrength;
+                            int SpringStrength = Convert.ToInt32(openSubKey.GetValue("SpringStrength")) / 100;
+                            slider_SpringStrength.Value = SpringStrength;
 
-                        int SpringStrength = Convert.ToInt32(registryKey.GetValue("SpringStrength")) / 100;
-                        slider_SpringStrength.Value = SpringStrength;
+                            int DamperStrength = Convert.ToInt32(openSubKey.GetValue("DamperStrength")) / 100;
+                            slider_DamperStrength.Value = DamperStrength;
 
-                        int DamperStrength = Convert.ToInt32(registryKey.GetValue("DamperStrength")) / 100;
-                        slider_DamperStrength.Value = DamperStrength;
-
-                        int CenteringSpring = Convert.ToInt32(registryKey.GetValue("CenteringSpring")) / 100;
-                        slider_CenteringSpring.Value = CenteringSpring;
-                    }
-                    else
-                    {
-                        throw new ArgumentNullException();
+                            int CenteringSpring = Convert.ToInt32(openSubKey.GetValue("CenteringSpring")) / 100;
+                            slider_CenteringSpring.Value = CenteringSpring;
+                        }
+                        else
+                        {
+                            throw new ArgumentNullException();
+                        }
                     }
                 }
-
-                //Close and dispose the registry
-                registryKeyCurrentUser.Dispose();
             }
             catch
             {
@@ -85,36 +80,49 @@ namespace LogiWheelSettings
             }
         }
 
+        //Load the available profiles
+        void ProfilesLoad()
+        {
+            try
+            {
+                combobox_SettingsLoadProfile.Items.Clear();
+                DirectoryInfo directoryInfo = new DirectoryInfo("Profiles");
+                foreach (FileInfo file in directoryInfo.GetFiles("*.xml"))
+                {
+                    combobox_SettingsLoadProfile.Items.Add(Path.GetFileNameWithoutExtension(file.Name));
+                }
+            }
+            catch { }
+        }
+
         //Reset the settings to default
         void SettingsReset()
         {
             try
             {
                 //Open the Windows registry
-                RegistryKey registryKeyCurrentUser = RegistryKey.OpenBaseKey(RegistryHive.CurrentUser, RegistryView.Registry32);
+                using (RegistryKey registryKeyCurrentUser = RegistryKey.OpenBaseKey(RegistryHive.CurrentUser, RegistryView.Registry32))
+                {
+                    //Remove Logitech settings key
+                    try
+                    {
+                        registryKeyCurrentUser.DeleteSubKeyTree(@"Software\Logitech\Gaming Software\DriverSettings\" + vLoadDeviceId);
+                    }
+                    catch
+                    {
+                        Debug.WriteLine("Failed removing settings key.");
+                    }
 
-                //Remove Logitech settings
-                try
-                {
-                    registryKeyCurrentUser.DeleteSubKeyTree(@"Software\Logitech\Gaming Software\DriverSettings\" + vLoadDeviceId);
+                    //Create Logitech settings key
+                    try
+                    {
+                        registryKeyCurrentUser.CreateSubKey(@"Software\Logitech\Gaming Software\DriverSettings\" + vLoadDeviceId);
+                    }
+                    catch
+                    {
+                        Debug.WriteLine("Failed creating settings key.");
+                    }
                 }
-                catch
-                {
-                    Debug.WriteLine("Failed removing settings key.");
-                }
-
-                //Create Logitech settings key
-                try
-                {
-                    registryKeyCurrentUser.CreateSubKey(@"Software\Logitech\Gaming Software\DriverSettings\" + vLoadDeviceId);
-                }
-                catch
-                {
-                    Debug.WriteLine("Failed creating settings key.");
-                }
-
-                //Close and dispose the registry
-                registryKeyCurrentUser.Dispose();
 
                 //Set default Logitech settings
                 UpdateRegistryValueIntDword("CenteringSpring", 2500);
@@ -124,34 +132,20 @@ namespace LogiWheelSettings
                 UpdateRegistryValueIntDword("PersistentCenteringSpring", 0);
                 UpdateRegistryValueIntDword("SpringStrength", 10000);
 
+                //Reset profile selection
+                combobox_SettingsLoadProfile.SelectedIndex = -1;
+                vLoadProfile = string.Empty;
+
                 //Load the current settings
                 SettingsLoad();
             }
             catch
             {
-                MessageBox.Show("Failed resetting to default values.", "LogiWheelSettings");
+                MessageBox.Show("Failed resetting to default settings.", "LogiWheelSettings");
             }
         }
 
         void UpdateRegistryValueIntDword(string name, int value)
-        {
-            try
-            {
-                using (RegistryKey registryKeyCurrentUser = RegistryKey.OpenBaseKey(RegistryHive.CurrentUser, RegistryView.Registry32))
-                {
-                    using (RegistryKey openSubKey = registryKeyCurrentUser.OpenSubKey(@"Software\Logitech\Gaming Software\DriverSettings\" + vLoadDeviceId, true))
-                    {
-                        openSubKey.SetValue(name, value);
-                    }
-                }
-            }
-            catch
-            {
-                MessageBox.Show("Could not change registry, please run as administrator.", "LogiWheelSettings");
-            }
-        }
-
-        void UpdateRegistryValueStringSz(string name, string value)
         {
             try
             {
@@ -182,8 +176,7 @@ namespace LogiWheelSettings
                     launchProcess.StartInfo.FileName = logitechHubPath;
                     launchProcess.Start();
                 }
-
-                if (File.Exists(logitechGamingPath))
+                else if (File.Exists(logitechGamingPath))
                 {
                     Process launchProcess = new Process();
                     launchProcess.StartInfo.FileName = logitechGamingPath;
@@ -191,6 +184,79 @@ namespace LogiWheelSettings
                 }
             }
             catch { }
+        }
+
+        void button_SettingsSaveProfile_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (vLoadProfile == string.Empty)
+                {
+                    Debug.WriteLine("No profile selected.");
+                    return;
+                }
+
+                Debug.WriteLine("Saving profile: " + vLoadProfile);
+                XDocument xmlProfile = XDocument.Load(vLoadProfile);
+
+                int ForceEnabled = (bool)checkbox_ForceEnabled.IsChecked ? 1 : 0;
+                xmlProfile.Descendants("ForceEnabled").First().Value = ForceEnabled.ToString();
+
+                int PersistentCenteringSpring = (bool)checkbox_PersistentCenteringSpring.IsChecked ? 1 : 0;
+                xmlProfile.Descendants("PersistentCenteringSpring").First().Value = PersistentCenteringSpring.ToString();
+
+                int OverallStrength = Convert.ToInt32(slider_OverallStrength.Value) * 100;
+                xmlProfile.Descendants("OverallStrength").First().Value = OverallStrength.ToString();
+
+                int SpringStrength = Convert.ToInt32(slider_SpringStrength.Value) * 100;
+                xmlProfile.Descendants("SpringStrength").First().Value = SpringStrength.ToString();
+
+                int DamperStrength = Convert.ToInt32(slider_DamperStrength.Value) * 100;
+                xmlProfile.Descendants("DamperStrength").First().Value = DamperStrength.ToString();
+
+                int CenteringSpring = Convert.ToInt32(slider_CenteringSpring.Value) * 100;
+                xmlProfile.Descendants("CenteringSpring").First().Value = CenteringSpring.ToString();
+
+                xmlProfile.Save(vLoadProfile);
+                Debug.WriteLine("Saved profile: " + vLoadProfile);
+            }
+            catch
+            {
+                MessageBox.Show("Failed saving profile.", "LogiWheelSettings");
+            }
+        }
+
+        void SettingsLoadProfile()
+        {
+            try
+            {
+                Debug.WriteLine("Loading profile: " + vLoadProfile);
+                XDocument xmlProfile = XDocument.Load(vLoadProfile);
+
+                int ForceEnabled = Convert.ToInt32(xmlProfile.Descendants("ForceEnabled").First().Value);
+                checkbox_ForceEnabled.IsChecked = ForceEnabled == 1;
+
+                int PersistentCenteringSpring = Convert.ToInt32(xmlProfile.Descendants("PersistentCenteringSpring").First().Value);
+                checkbox_PersistentCenteringSpring.IsChecked = PersistentCenteringSpring == 1;
+
+                int OverallStrength = Convert.ToInt32(xmlProfile.Descendants("OverallStrength").First().Value) / 100;
+                slider_OverallStrength.Value = OverallStrength;
+
+                int SpringStrength = Convert.ToInt32(xmlProfile.Descendants("SpringStrength").First().Value) / 100;
+                slider_SpringStrength.Value = SpringStrength;
+
+                int DamperStrength = Convert.ToInt32(xmlProfile.Descendants("DamperStrength").First().Value) / 100;
+                slider_DamperStrength.Value = DamperStrength;
+
+                int CenteringSpring = Convert.ToInt32(xmlProfile.Descendants("CenteringSpring").First().Value) / 100;
+                slider_CenteringSpring.Value = CenteringSpring;
+
+                Debug.WriteLine("Loaded profile: " + vLoadProfile);
+            }
+            catch
+            {
+                MessageBox.Show("Failed loading profile.", "LogiWheelSettings");
+            }
         }
     }
 }

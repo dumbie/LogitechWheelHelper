@@ -6,34 +6,50 @@ namespace LogiWheelSettings
 {
     public partial class WindowMain : Window
     {
-        void checkbox_ForceEnabled_Click(object sender, RoutedEventArgs e)
+        void combobox_SettingsLoadProfile_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             try
             {
-                if ((bool)checkbox_ForceEnabled.IsChecked)
-                {
-                    UpdateRegistryValueIntDword("ForceEnabled", 1);
-                }
-                else
-                {
-                    UpdateRegistryValueIntDword("ForceEnabled", 0);
-                }
+                ComboBox senderCombobox = (ComboBox)sender;
+                string profileName = senderCombobox.SelectedItem.ToString();
+                vLoadProfile = @"Profiles\" + profileName + ".xml";
+                SettingsLoadProfile();
             }
             catch { }
         }
 
-        void checkbox_PersistentCenteringSpring_Click(object sender, RoutedEventArgs e)
+        void checkbox_ForceEnabled_Checked(object sender, RoutedEventArgs e)
         {
             try
             {
-                if ((bool)checkbox_PersistentCenteringSpring.IsChecked)
-                {
-                    UpdateRegistryValueIntDword("PersistentCenteringSpring", 1);
-                }
-                else
-                {
-                    UpdateRegistryValueIntDword("PersistentCenteringSpring", 0);
-                }
+                UpdateRegistryValueIntDword("ForceEnabled", 1);
+            }
+            catch { }
+        }
+
+        void checkbox_ForceEnabled_Unchecked(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                UpdateRegistryValueIntDword("ForceEnabled", 0);
+            }
+            catch { }
+        }
+
+        void checkbox_PersistentCenteringSpring_Checked(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                UpdateRegistryValueIntDword("PersistentCenteringSpring", 1);
+            }
+            catch { }
+        }
+
+        void checkbox_PersistentCenteringSpring_Unchecked(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                UpdateRegistryValueIntDword("PersistentCenteringSpring", 0);
             }
             catch { }
         }
