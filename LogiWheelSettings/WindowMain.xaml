@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:LogiWheelSettings"
         mc:Ignorable="d"
         Title="Logitech Wheel Settings"
-        ResizeMode="NoResize"
+        ResizeMode="CanMinimize"
         Height="515"
         Width="380">
 
