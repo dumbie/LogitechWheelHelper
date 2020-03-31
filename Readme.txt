@@ -10,6 +10,11 @@ These settings were always available for the G25 and G27 but Logitech decided to
 
 Tested with drivers LGS 9.02.65 and LGHUB 2020.1.31155.
 
+| Installation Instructions
+1) Extract the LogiWheelSettings folder to any directory you want on your pc.
+2) Make sure that you have installed all the requirements listed below.
+3) Launch LogiWheelSettings.exe and setup your racing wheel to your liking.
+
 | Tips and tricks
 - Some users might need to run the application as administrator to work properly.*
 * You can run it as administrator by right mouse clicking on "LogiWheelSettings.exe"
