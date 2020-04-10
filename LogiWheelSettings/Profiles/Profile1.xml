@@ -1,9 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <profile>
-  <CenteringSpring>2500</CenteringSpring>
-  <DamperStrength>8000</DamperStrength>
   <ForceEnabled>1</ForceEnabled>
   <OverallStrength>8000</OverallStrength>
-  <PersistentCenteringSpring>0</PersistentCenteringSpring>
   <SpringStrength>8000</SpringStrength>
+  <DamperStrength>8000</DamperStrength>
 </profile>

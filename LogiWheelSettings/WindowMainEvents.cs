@@ -93,19 +93,6 @@ namespace LogiWheelSettings
             catch { }
         }
 
-        void slider_CenteringSpring_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            try
-            {
-                Slider senderSlider = (Slider)sender;
-                int sliderValue = Convert.ToInt32(senderSlider.Value);
-                int registryValue = sliderValue * 100;
-                textblock_CenteringSpring.Text = "Centering spring strength: " + sliderValue + "%";
-                UpdateRegistryValueIntDword("CenteringSpring", registryValue);
-            }
-            catch { }
-        }
-
         void button_SettingsReset_Click(object sender, RoutedEventArgs e)
         {
             try

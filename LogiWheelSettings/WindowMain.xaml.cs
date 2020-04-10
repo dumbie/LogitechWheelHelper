@@ -16,7 +16,8 @@ namespace LogiWheelSettings
         //Application Variables
         public static string vLoadProfile = string.Empty;
         public static string vLoadDeviceName = "G27/G29/G920";
-        public static string vLoadDeviceId = "VID_046D&PID_C29B";
+        public static string vLoadDeviceId = "VID_046D&PID_C29B"; //G27/G29/G920
+        //public static string vLoadDeviceId = "VID_046D&PID_C299"; //G25
 
         //Application Timers
         public static DispatcherTimer vDispatcherTimer = new DispatcherTimer();
@@ -83,9 +84,6 @@ namespace LogiWheelSettings
                             int ForceEnabled = Convert.ToInt32(openSubKey.GetValue("ForceEnabled"));
                             checkbox_ForceEnabled.IsChecked = ForceEnabled == 1;
 
-                            int PersistentCenteringSpring = Convert.ToInt32(openSubKey.GetValue("PersistentCenteringSpring"));
-                            checkbox_PersistentCenteringSpring.IsChecked = PersistentCenteringSpring == 1;
-
                             int OverallStrength = Convert.ToInt32(openSubKey.GetValue("OverallStrength")) / 100;
                             slider_OverallStrength.Value = OverallStrength;
 
@@ -94,9 +92,6 @@ namespace LogiWheelSettings
 
                             int DamperStrength = Convert.ToInt32(openSubKey.GetValue("DamperStrength")) / 100;
                             slider_DamperStrength.Value = DamperStrength;
-
-                            int CenteringSpring = Convert.ToInt32(openSubKey.GetValue("CenteringSpring")) / 100;
-                            slider_CenteringSpring.Value = CenteringSpring;
                         }
                         else
                         {
@@ -156,12 +151,10 @@ namespace LogiWheelSettings
                 }
 
                 //Set default Logitech settings
-                UpdateRegistryValueIntDword("CenteringSpring", 2500);
-                UpdateRegistryValueIntDword("DamperStrength", 10000);
                 UpdateRegistryValueIntDword("ForceEnabled", 1);
                 UpdateRegistryValueIntDword("OverallStrength", 10000);
-                UpdateRegistryValueIntDword("PersistentCenteringSpring", 0);
                 UpdateRegistryValueIntDword("SpringStrength", 10000);
+                UpdateRegistryValueIntDword("DamperStrength", 10000);
 
                 //Reset profile selection
                 combobox_SettingsLoadProfile.SelectedIndex = -1;
@@ -237,9 +230,6 @@ namespace LogiWheelSettings
                 int ForceEnabled = (bool)checkbox_ForceEnabled.IsChecked ? 1 : 0;
                 xmlProfile.Descendants("ForceEnabled").First().Value = ForceEnabled.ToString();
 
-                int PersistentCenteringSpring = (bool)checkbox_PersistentCenteringSpring.IsChecked ? 1 : 0;
-                xmlProfile.Descendants("PersistentCenteringSpring").First().Value = PersistentCenteringSpring.ToString();
-
                 int OverallStrength = Convert.ToInt32(slider_OverallStrength.Value) * 100;
                 xmlProfile.Descendants("OverallStrength").First().Value = OverallStrength.ToString();
 
@@ -248,9 +238,6 @@ namespace LogiWheelSettings
 
                 int DamperStrength = Convert.ToInt32(slider_DamperStrength.Value) * 100;
                 xmlProfile.Descendants("DamperStrength").First().Value = DamperStrength.ToString();
-
-                int CenteringSpring = Convert.ToInt32(slider_CenteringSpring.Value) * 100;
-                xmlProfile.Descendants("CenteringSpring").First().Value = CenteringSpring.ToString();
 
                 xmlProfile.Save(vLoadProfile);
 
@@ -272,9 +259,6 @@ namespace LogiWheelSettings
                 int ForceEnabled = Convert.ToInt32(xmlProfile.Descendants("ForceEnabled").First().Value);
                 checkbox_ForceEnabled.IsChecked = ForceEnabled == 1;
 
-                int PersistentCenteringSpring = Convert.ToInt32(xmlProfile.Descendants("PersistentCenteringSpring").First().Value);
-                checkbox_PersistentCenteringSpring.IsChecked = PersistentCenteringSpring == 1;
-
                 int OverallStrength = Convert.ToInt32(xmlProfile.Descendants("OverallStrength").First().Value) / 100;
                 slider_OverallStrength.Value = OverallStrength;
 
@@ -283,9 +267,6 @@ namespace LogiWheelSettings
 
                 int DamperStrength = Convert.ToInt32(xmlProfile.Descendants("DamperStrength").First().Value) / 100;
                 slider_DamperStrength.Value = DamperStrength;
-
-                int CenteringSpring = Convert.ToInt32(xmlProfile.Descendants("CenteringSpring").First().Value) / 100;
-                slider_CenteringSpring.Value = CenteringSpring;
 
                 ShowMessageStatus("Loaded profile: " + Path.GetFileNameWithoutExtension(vLoadProfile));
                 Debug.WriteLine("Loaded profile: " + vLoadProfile);
