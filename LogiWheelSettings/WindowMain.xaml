@@ -21,7 +21,7 @@
             <TextBlock x:Name="textblock_DamperStrength" Text="Damper effect strength"/>
             <Slider x:Name="slider_DamperStrength" Minimum="0" Maximum="150" ValueChanged="slider_DamperStrength_ValueChanged"/>
 
-            <TextBlock Margin="0,10,0,0" Text="* You can change the wheel rotate range, sensitivity, centering Spring and also the pedal sensitivity, combine pedal settings in the Logitech software." TextWrapping="Wrap"/>
+            <TextBlock Margin="0,10,0,0" Text="* You can change the wheel rotate range, sensitivity, centering spring and also the pedal sensitivity, combine pedal settings in the Logitech software." TextWrapping="Wrap"/>
             <TextBlock Margin="0,10,0,0" Text="* You may have to restart the game to apply updated settings."/>
             <TextBlock Margin="0,10,0,0" Text="* Logitech software needs to be running for your wheel to work."/>
             <TextBlock x:Name="textblock_DeviceCurrent" Margin="0,10,0,0" Text="Current device"/>
