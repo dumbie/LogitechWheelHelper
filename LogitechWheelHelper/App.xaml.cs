@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace LogiWheelSettings
+namespace LogitechWheelHelper
 {
     public partial class App : Application { }
 }

@@ -1,6 +1,6 @@
 /packages
-/LogiWheelSettings/bin
-/LogiWheelSettings/obj
+/LogitechWheelHelper/bin
+/LogitechWheelHelper/obj
 *.user
 *.aps
 *.pfx

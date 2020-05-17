@@ -9,7 +9,7 @@ using System.Windows.Controls;
 using System.Windows.Threading;
 using System.Xml.Linq;
 
-namespace LogiWheelSettings
+namespace LogitechWheelHelper
 {
     public partial class WindowMain : Window
     {
@@ -39,7 +39,7 @@ namespace LogiWheelSettings
                 //Update version tooltip
                 string stringVersion = "Application made by Arnold Vink\nVersion: v" + Assembly.GetEntryAssembly().FullName.Split('=')[1].Split(',')[0];
                 ToolTip tooltipVersion = new ToolTip() { Content = stringVersion };
-                image_LogiWheelSettings.ToolTip = tooltipVersion;
+                image_LogitechWheelHelper.ToolTip = tooltipVersion;
             }
             catch { }
         }

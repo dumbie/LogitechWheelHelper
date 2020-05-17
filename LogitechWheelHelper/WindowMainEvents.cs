@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 
-namespace LogiWheelSettings
+namespace LogitechWheelHelper
 {
     public partial class WindowMain : Window
     {

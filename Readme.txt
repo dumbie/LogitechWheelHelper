@@ -1,6 +1,6 @@
-LogiWheelSettings allows you to change global settings that still work but are no longer visible in the modern Logitech drivers for devices like the G29 and G920.
+Logitech Wheel Helper allows you to change global settings that still work but are no longer visible in the modern Logitech drivers for devices like the G29 and G920.
 
-You can easily change global settings that adjust to all games like:
+You can easily change global force feedback settings that adjust to all games like:
 - Overall effects strength
 - Spring effect strength
 - Damper effect strength
@@ -10,15 +10,16 @@ These settings were always available for the G25 and G27 but Logitech decided to
 Tested with drivers LGS 9.02.65 and LGHUB 2020.1.31155.
 
 | Installation Instructions
-1) Extract the LogiWheelSettings folder to any directory you want on your pc.
+1) Extract the Logitech Wheel Helper folder to any directory you want on your pc.
 2) Make sure that you have installed all the requirements listed below.
-3) Launch LogiWheelSettings.exe and setup your racing wheel to your liking.
+3) Launch LogitechWheelHelper.exe and setup your racing wheel to your liking.
 
 | Tips and tricks
 - Some users might need to run the application as administrator to work properly.*
-* You can run it as administrator by right mouse clicking on "LogiWheelSettings.exe"
+* You can run it as administrator by right mouse clicking on LogitechWheelHelper.exe
 
 | Requirements
+- Logitech Gaming drivers installed.
 - Microsoft .Net Framework 4.5 installed.
 
 | Support and bug reporting
